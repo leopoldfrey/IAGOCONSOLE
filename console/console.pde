@@ -156,7 +156,7 @@ void draw() {
           //if(ls.cpt == 1)
           //oscP5.send(feedString, feedback);
 
-          if(ls.cpt >= 0)
+          if (ls.cpt >= 0)
             text(s.substring(0, ls.cpt), ww, i * hspace + 30);
           if (millis() - ls.time > dur)
           {
@@ -212,6 +212,18 @@ void keyPressed() {
     invert = !invert;
   } else if (key == 'C') {
     clear();
+  } else if (key == 'T') {
+    LogString ls = new LogString();
+    ls.setString("IAGOTCHI : Je suis pressé de naître !");
+    ls.setCpt(1);
+    ls.init();
+    ls.setSize(defsize);
+    ls.setFont(deffont);
+    ls.setColor(defcolor);
+    lastlog = ls;
+    fifo.add(ls);
+    if (fifo.size() > fifosize)
+      fifo.poll();
   }
 }
 
@@ -241,6 +253,14 @@ void oscEvent(OscMessage theOscMessage)
     {
       String s = new String(ptext, "UTF-8");
       s = s.substring(s.indexOf(",s")+4);
+      while(s.charAt(s.length()-1) == 0)
+        s = s.substring(0, s.length() - 1);
+      
+      /*for(int i = 0 ; i < s.length() ; i++)
+        print(" "+(int)s.charAt(i));
+        println();
+        //*/
+        
       if (s.length() > maxchar)
       {
         Vector lsV = new Vector<LogString>();
@@ -274,6 +294,7 @@ void oscEvent(OscMessage theOscMessage)
             fifo.poll();
         }
       } else {
+        
         LogString ls = new LogString();
         ls.setString(s);
         ls.setCpt(1);
@@ -293,6 +314,8 @@ void oscEvent(OscMessage theOscMessage)
     byte ptext[] = theOscMessage.getBytes();
     String s = new String(ptext);//, "UTF_8");
     s = s.substring(s.indexOf(",s")+4);
+    while(s.charAt(s.length()-1) == 0)
+        s = s.substring(0, s.length() - 1);
     lastlog.setString(s);
     lastlog.setCpt(s.length());
   } else if (theOscMessage.checkAddrPattern("/size")==true) {
