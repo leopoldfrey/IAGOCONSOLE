@@ -31,7 +31,7 @@ int base = 0;
 
 int maxchar = 200;
 
-int defsize = 11;
+int defsize = 14;
 int deffont = 0;
 int margin = 30;
 int hspace = 18;
